@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { User, Calendar, MapPin, Phone, Mail, Globe, HeartPulse } from "lucide-react";
+import { User, Calendar, MapPin, Phone, Mail, Globe, HeartPulse, Send } from "lucide-react";
 
 // Schema for form validation
 const formSchema = z.object({
@@ -37,71 +37,81 @@ export default function PatientForm() {
     console.log("Form Submitted:", data);
   };
 
+  // Helper for input styles
+  const inputClass = "w-full p-3.5 border border-slate-200 rounded-xl bg-slate-50/50 hover:bg-white focus:bg-white focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all duration-200 text-slate-700 shadow-sm";
+  const labelClass = "text-sm font-semibold text-slate-700 mb-1.5 ml-1 block";
+
   return (
-    <div className="max-w-4xl mx-auto p-4 sm:p-6 md:p-8">
-      <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+    <div className="max-w-4xl mx-auto">
+      <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white overflow-hidden">
         
         {/* Header */}
-        <div className="bg-blue-600 p-6 text-white">
+        <div className="bg-gradient-to-r from-indigo-600 via-blue-600 to-sky-500 p-8 text-white">
           <div className="flex items-center gap-3 mb-2">
-            <HeartPulse size={32} />
-            <h1 className="text-2xl font-bold tracking-wide">Agnos Hospital</h1>
+            <div className="bg-white/20 p-2.5 rounded-2xl backdrop-blur-sm">
+              <HeartPulse size={28} className="text-white" />
+            </div>
+            <h1 className="text-3xl font-extrabold tracking-tight">Agnos Hospital</h1>
           </div>
-          <p className="text-blue-100 mt-1">📝 Patient Registration Form. Please fill in your information below.</p>
+          <p className="text-indigo-100 text-sm md:text-base font-medium opacity-90 pl-1">
+            Patient Registration Form • Please provide your accurate information.
+          </p>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="p-6 md:p-8 space-y-8">
+        <form onSubmit={handleSubmit(onSubmit)} className="p-6 md:p-10 space-y-10">
           
           {/* Personal Details */}
           <section>
-            <h2 className="text-lg font-semibold text-gray-800 border-b pb-2 mb-4 flex items-center gap-2">
-              <User size={20} className="text-blue-600"/>
-              Personal Details
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              
-              <div className="flex flex-col gap-1">
-                <label className="text-sm font-medium text-gray-700">First Name <span className="text-red-500">*</span></label>
-                <input {...register("firstName")} className="p-3 border rounded-lg bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="e.g. Somchai" />
-                {errors.firstName && <span className="text-xs text-red-500">{errors.firstName.message}</span>}
+            <div className="flex items-center gap-2 mb-6 pb-3 border-b border-slate-100">
+              <div className="bg-indigo-100 p-2 rounded-lg">
+                <User size={18} className="text-indigo-600"/>
+              </div>
+              <h2 className="text-lg font-bold text-slate-800">Personal Details</h2>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+              <div>
+                <label className={labelClass}>First Name <span className="text-rose-500">*</span></label>
+                <input {...register("firstName")} className={inputClass} placeholder="e.g. Somchai" />
+                {errors.firstName && <span className="text-xs text-rose-500 mt-1 ml-1 block font-medium">{errors.firstName.message}</span>}
               </div>
 
-              <div className="flex flex-col gap-1">
-                <label className="text-sm font-medium text-gray-700">Middle Name <span className="text-gray-400 text-xs">(Optional)</span></label>
-                <input {...register("middleName")} className="p-3 border rounded-lg bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="-" />
+              <div>
+                <label className={labelClass}>Middle Name <span className="text-slate-400 font-normal">(Optional)</span></label>
+                <input {...register("middleName")} className={inputClass} placeholder="-" />
               </div>
 
-              <div className="flex flex-col gap-1">
-                <label className="text-sm font-medium text-gray-700">Last Name <span className="text-red-500">*</span></label>
-                <input {...register("lastName")} className="p-3 border rounded-lg bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="e.g. Jaidee" />
-                {errors.lastName && <span className="text-xs text-red-500">{errors.lastName.message}</span>}
+              <div>
+                <label className={labelClass}>Last Name <span className="text-rose-500">*</span></label>
+                <input {...register("lastName")} className={inputClass} placeholder="e.g. Jaidee" />
+                {errors.lastName && <span className="text-xs text-rose-500 mt-1 ml-1 block font-medium">{errors.lastName.message}</span>}
               </div>
 
-              <div className="flex flex-col gap-1">
-                <label className="text-sm font-medium text-gray-700">Date of Birth <span className="text-red-500">*</span></label>
+              <div>
+                <label className={labelClass}>Date of Birth <span className="text-rose-500">*</span></label>
                 <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                  <input type="date" {...register("dob")} className="w-full p-3 pl-10 border rounded-lg bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition text-gray-700" />
+                  <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                  <input type="date" {...register("dob")} className={`${inputClass} pl-10`} />
                 </div>
-                {errors.dob && <span className="text-xs text-red-500">{errors.dob.message}</span>}
+                {errors.dob && <span className="text-xs text-rose-500 mt-1 ml-1 block font-medium">{errors.dob.message}</span>}
               </div>
 
-              <div className="flex flex-col gap-1">
-                <label className="text-sm font-medium text-gray-700">Gender <span className="text-red-500">*</span></label>
-                <select {...register("gender")} className="p-3 border rounded-lg bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition text-gray-700">
+              <div>
+                <label className={labelClass}>Gender <span className="text-rose-500">*</span></label>
+                <select {...register("gender")} className={inputClass}>
                   <option value="">Select Gender...</option>
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
                   <option value="Other">Other</option>
                 </select>
-                {errors.gender && <span className="text-xs text-red-500">{errors.gender.message}</span>}
+                {errors.gender && <span className="text-xs text-rose-500 mt-1 ml-1 block font-medium">{errors.gender.message}</span>}
               </div>
 
-              <div className="flex flex-col gap-1">
-                <label className="text-sm font-medium text-gray-700">Nationality <span className="text-red-500">*</span></label>
+              <div>
+                <label className={labelClass}>Nationality <span className="text-rose-500">*</span></label>
                 <div className="relative">
-                  <Globe className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                  <select {...register("nationality")} className="w-full p-3 pl-10 border rounded-lg bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition text-gray-700">
+                  <Globe className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                  <select {...register("nationality")} className={`${inputClass} pl-10`}>
                     <option value="">Select Nationality...</option>
                     <option value="Thai">Thai</option>
                     <option value="American">American</option>
@@ -109,88 +119,92 @@ export default function PatientForm() {
                     <option value="Other">Other</option>
                   </select>
                 </div>
-                {errors.nationality && <span className="text-xs text-red-500">{errors.nationality.message}</span>}
+                {errors.nationality && <span className="text-xs text-rose-500 mt-1 ml-1 block font-medium">{errors.nationality.message}</span>}
               </div>
 
-              <div className="flex flex-col gap-1 md:col-span-2">
-                <label className="text-sm font-medium text-gray-700">Religion <span className="text-gray-400 text-xs">(Optional)</span></label>
-                <input {...register("religion")} className="p-3 border rounded-lg bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="e.g. Buddhism" />
+              <div className="md:col-span-2">
+                <label className={labelClass}>Religion <span className="text-slate-400 font-normal">(Optional)</span></label>
+                <input {...register("religion")} className={inputClass} placeholder="e.g. Buddhism" />
               </div>
-
             </div>
           </section>
 
           {/* Contact Information */}
           <section>
-            <h2 className="text-lg font-semibold text-gray-800 border-b pb-2 mb-4 flex items-center gap-2">
-              <Phone size={20} className="text-blue-600"/>
-              Contact Information
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              
-              <div className="flex flex-col gap-1">
-                <label className="text-sm font-medium text-gray-700">Phone Number <span className="text-red-500">*</span></label>
+            <div className="flex items-center gap-2 mb-6 pb-3 border-b border-slate-100">
+              <div className="bg-sky-100 p-2 rounded-lg">
+                <Phone size={18} className="text-sky-600"/>
+              </div>
+              <h2 className="text-lg font-bold text-slate-800">Contact Information</h2>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+              <div>
+                <label className={labelClass}>Phone Number <span className="text-rose-500">*</span></label>
                 <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                  <input type="tel" {...register("phone")} className="w-full p-3 pl-10 border rounded-lg bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="0812345678" />
+                  <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                  <input type="tel" {...register("phone")} className={`${inputClass} pl-10`} placeholder="081 234 5678" />
                 </div>
-                {errors.phone && <span className="text-xs text-red-500">{errors.phone.message}</span>}
+                {errors.phone && <span className="text-xs text-rose-500 mt-1 ml-1 block font-medium">{errors.phone.message}</span>}
               </div>
 
-              <div className="flex flex-col gap-1">
-                <label className="text-sm font-medium text-gray-700">Email <span className="text-red-500">*</span></label>
+              <div>
+                <label className={labelClass}>Email <span className="text-rose-500">*</span></label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                  <input type="email" {...register("email")} className="w-full p-3 pl-10 border rounded-lg bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="example@email.com" />
+                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                  <input type="email" {...register("email")} className={`${inputClass} pl-10`} placeholder="example@email.com" />
                 </div>
-                {errors.email && <span className="text-xs text-red-500">{errors.email.message}</span>}
+                {errors.email && <span className="text-xs text-rose-500 mt-1 ml-1 block font-medium">{errors.email.message}</span>}
               </div>
 
-              <div className="flex flex-col gap-1 md:col-span-2">
-                <label className="text-sm font-medium text-gray-700">Address <span className="text-red-500">*</span></label>
+              <div className="md:col-span-2">
+                <label className={labelClass}>Address <span className="text-rose-500">*</span></label>
                 <div className="relative">
-                  <MapPin className="absolute left-3 top-4 text-gray-400" size={18} />
-                  <textarea {...register("address")} rows={3} className="w-full p-3 pl-10 border rounded-lg bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition resize-none" placeholder="123 Sukhumvit Rd..." />
+                  <MapPin className="absolute left-3.5 top-4 text-slate-400" size={18} />
+                  <textarea {...register("address")} rows={3} className={`${inputClass} pl-10 resize-none`} placeholder="123 Sukhumvit Rd..." />
                 </div>
-                {errors.address && <span className="text-xs text-red-500">{errors.address.message}</span>}
+                {errors.address && <span className="text-xs text-rose-500 mt-1 ml-1 block font-medium">{errors.address.message}</span>}
               </div>
 
-              <div className="flex flex-col gap-1 md:col-span-2">
-                <label className="text-sm font-medium text-gray-700">Preferred Language <span className="text-red-500">*</span></label>
-                <select {...register("language")} className="p-3 border rounded-lg bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition text-gray-700">
+              <div className="md:col-span-2">
+                <label className={labelClass}>Preferred Language <span className="text-rose-500">*</span></label>
+                <select {...register("language")} className={inputClass}>
                   <option value="">Select Language...</option>
-                  <option value="Thai">Thai</option>
+                  <option value="Thai">ภาษาไทย (Thai)</option>
                   <option value="English">English</option>
                 </select>
-                {errors.language && <span className="text-xs text-red-500">{errors.language.message}</span>}
+                {errors.language && <span className="text-xs text-rose-500 mt-1 ml-1 block font-medium">{errors.language.message}</span>}
               </div>
-
             </div>
           </section>
 
           {/* Emergency Contact */}
           <section>
-            <h2 className="text-lg font-semibold text-gray-800 border-b pb-2 mb-4 flex items-center gap-2">
-              <User size={20} className="text-red-500"/>
-              Emergency Contact <span className="text-gray-400 text-sm font-normal">(Optional)</span>
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div className="flex flex-col gap-1">
-                <label className="text-sm font-medium text-gray-700">Contact Name</label>
-                <input {...register("emergencyName")} className="p-3 border rounded-lg bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="e.g. Somsri Jaidee" />
+            <div className="flex items-center gap-2 mb-6 pb-3 border-b border-slate-100">
+              <div className="bg-rose-100 p-2 rounded-lg">
+                <User size={18} className="text-rose-500"/>
+              </div>
+              <h2 className="text-lg font-bold text-slate-800">Emergency Contact <span className="text-slate-400 text-sm font-normal ml-1">(Optional)</span></h2>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+              <div>
+                <label className={labelClass}>Contact Name</label>
+                <input {...register("emergencyName")} className={inputClass} placeholder="e.g. Somsri Jaidee" />
               </div>
 
-              <div className="flex flex-col gap-1">
-                <label className="text-sm font-medium text-gray-700">Relationship</label>
-                <input {...register("emergencyRelation")} className="p-3 border rounded-lg bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="e.g. Mother" />
+              <div>
+                <label className={labelClass}>Relationship</label>
+                <input {...register("emergencyRelation")} className={inputClass} placeholder="e.g. Mother, Spouse" />
               </div>
             </div>
           </section>
 
           {/* Submit Button */}
-          <div className="pt-4">
-            <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 rounded-xl transition duration-200 shadow-md hover:shadow-lg flex justify-center items-center gap-2">
+          <div className="pt-6">
+            <button type="submit" className="w-full bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold text-lg py-4 rounded-2xl transition-all duration-300 shadow-[0_4px_14px_0_rgb(79,70,229,0.39)] hover:shadow-[0_6px_20px_rgba(79,70,229,0.23)] hover:-translate-y-0.5 flex justify-center items-center gap-2">
               Submit Information
+              <Send size={18} />
             </button>
           </div>
 
