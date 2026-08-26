@@ -10,6 +10,14 @@
 
 ---
 
+## 🛠️ เทคโนโลยีที่ใช้ (Tech Stack Used)
+- **Next.js & React (TypeScript)**
+- **TailwindCSS** for responsive styling
+- **Supabase (Realtime WebSockets)** for instant data synchronization
+- **React Hook Form & Zod** for robust form validation
+
+---
+
 ## 💻 วิธีการรันโปรเจกต์
 
 1. ติดตั้ง Dependencies:
