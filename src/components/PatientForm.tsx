@@ -64,7 +64,10 @@ export default function PatientForm() {
     };
   }, []);
 
-  // Broadcast data whenever form changes
+  // Stringify to prevent useEffect from firing on unrelated re-renders (like form submission)
+  const stringifiedValues = JSON.stringify(formValues);
+
+  // Broadcast data whenever form actual values change
   useEffect(() => {
     if (channelRef.current) {
       // Send form data via broadcast
@@ -78,7 +81,7 @@ export default function PatientForm() {
       const hasData = Object.values(formValues).some((v) => v !== undefined && v !== "");
       channelRef.current.track({ status: hasData ? 'actively_filling' : 'inactive' });
     }
-  }, [formValues]);
+  }, [stringifiedValues]); // Using stringified values as dependency
 
   const onSubmit = (data: PatientFormData) => {
     console.log("Form Submitted:", data);
