@@ -7,6 +7,8 @@ import { User, Calendar, MapPin, Phone, Mail, Globe, HeartPulse, Send } from "lu
 import { patientFormSchema, PatientFormData } from "@/schemas/patientSchema";
 import { usePatientSync } from "@/hooks/usePatientSync";
 import { InputField } from "@/components/ui/InputField";
+import { PhoneField } from "@/components/ui/PhoneField";
+import { Control } from "react-hook-form";
 import { SelectField } from "@/components/ui/SelectField";
 
 export default function PatientForm() {
@@ -14,6 +16,7 @@ export default function PatientForm() {
   
   const {
     register,
+    control,
     handleSubmit,
     watch,
     formState: { errors },
@@ -155,13 +158,11 @@ export default function PatientForm() {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-              <InputField
+              <PhoneField
                 label="Phone Number"
-                type="tel"
                 required
-                icon={<Phone size={18} />}
-                placeholder="081 234 5678"
-                register={register("phone")}
+                control={control}
+                name="phone"
                 error={errors.phone?.message}
               />
 
