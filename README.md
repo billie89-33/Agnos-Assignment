@@ -15,6 +15,8 @@
 - **TailwindCSS** for responsive styling
 - **Supabase (Realtime WebSockets)** for instant data synchronization
 - **React Hook Form & Zod** for robust form validation
+- **react-phone-number-input** สำหรับระบบเลือกประเทศและตรวจสอบรูปแบบเบอร์โทรศัพท์
+- **react-datepicker** สำหรับปฏิทินเลือกวันเกิด (บังคับรูปแบบ DD/MM/YYYY)
 
 ---
 
