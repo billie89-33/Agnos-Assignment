@@ -1,55 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Activity, User, Phone, MapPin, Globe, HeartPulse, UserCircle } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import { useAdminSync } from "@/hooks/useAdminSync";
 
 export default function StaffDashboard() {
-  const [patientData, setPatientData] = useState<any>({});
-  const [status, setStatus] = useState<"inactive" | "actively_filling" | "submitted">("inactive");
-
-  useEffect(() => {
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return;
-
-    const channel = supabase.channel('patient-room', {
-      config: {
-        broadcast: { ack: false },
-        presence: { key: 'admin' },
-      },
-    });
-
-    channel
-      .on('broadcast', { event: 'form-update' }, (payload) => {
-        // Update the admin view with real-time data from the patient form
-        setPatientData(payload.payload);
-      })
-      .on('presence', { event: 'sync' }, () => {
-        const state = channel.presenceState();
-        // Check if there is a patient in the room and what their status is
-        if (state.patient && state.patient.length > 0) {
-          const patientStatus = (state.patient[0] as any).status;
-          setStatus(patientStatus);
-        } else {
-          // If no patient is connected, set status back to inactive
-          setStatus("inactive");
-          setPatientData({}); // Optionally clear data when patient leaves
-        }
-      })
-      .subscribe();
-
-    return () => {
-      channel.unsubscribe();
-    };
-  }, []);
+  const { patientData, status } = useAdminSync();
 
   const getStatusBadge = () => {
     switch (status) {
       case "submitted":
-        return <div className="flex items-center gap-2 bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full font-semibold text-sm shadow-sm border border-emerald-200"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span> 🟢 Submitted</div>;
+        return <div className="flex items-center gap-2 bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full font-semibold text-sm shadow-sm border border-emerald-200"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span> ?? Submitted</div>;
       case "actively_filling":
-        return <div className="flex items-center gap-2 bg-amber-100 text-amber-700 px-4 py-2 rounded-full font-semibold text-sm shadow-sm border border-amber-200"><span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span> 🟡 Actively filling...</div>;
+        return <div className="flex items-center gap-2 bg-amber-100 text-amber-700 px-4 py-2 rounded-full font-semibold text-sm shadow-sm border border-amber-200"><span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span> ?? Actively filling...</div>;
       default:
-        return <div className="flex items-center gap-2 bg-slate-100 text-slate-600 px-4 py-2 rounded-full font-semibold text-sm shadow-sm border border-slate-200"><span className="w-2.5 h-2.5 rounded-full bg-slate-400"></span> ⚪ Inactive</div>;
+        return <div className="flex items-center gap-2 bg-slate-100 text-slate-600 px-4 py-2 rounded-full font-semibold text-sm shadow-sm border border-slate-200"><span className="w-2.5 h-2.5 rounded-full bg-slate-400"></span> ? Inactive</div>;
     }
   };
 

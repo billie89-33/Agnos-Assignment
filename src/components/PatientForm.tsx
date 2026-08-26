@@ -1,30 +1,11 @@
-"use client";
+﻿"use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { User, Calendar, MapPin, Phone, Mail, Globe, HeartPulse, Send } from "lucide-react";
-import { supabase } from "@/lib/supabase";
-
-// Schema for form validation
-const formSchema = z.object({
-  firstName: z.string().min(1, "First Name is required"),
-  middleName: z.string().optional(),
-  lastName: z.string().min(1, "Last Name is required"),
-  dob: z.string().min(1, "Date of Birth is required"),
-  gender: z.string().min(1, "Gender is required"),
-  nationality: z.string().min(1, "Nationality is required"),
-  religion: z.string().optional(),
-  phone: z.string().min(10, "Valid phone number is required"),
-  email: z.string().email("Invalid email address"),
-  address: z.string().min(1, "Address is required"),
-  language: z.string().min(1, "Preferred Language is required"),
-  emergencyName: z.string().optional(),
-  emergencyRelation: z.string().optional(),
-});
-
-export type PatientFormData = z.infer<typeof formSchema>;
+import { patientFormSchema, PatientFormData } from "@/schemas/patientSchema";
+import { usePatientSync } from "@/hooks/usePatientSync";
 
 export default function PatientForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -35,68 +16,13 @@ export default function PatientForm() {
     watch,
     formState: { errors },
   } = useForm<PatientFormData>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(patientFormSchema),
   });
 
   const formValues = watch();
-  const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
-
-  // Initialize Supabase Channel
-  useEffect(() => {
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return;
-
-    const channel = supabase.channel('patient-room', {
-      config: {
-        broadcast: { ack: false },
-        presence: { key: 'patient' },
-      },
-    });
-
-    channel.subscribe(async (status) => {
-      if (status === 'SUBSCRIBED') {
-        await channel.track({ status: 'inactive' });
-      }
-    });
-
-    channelRef.current = channel;
-
-    return () => {
-      channel.unsubscribe();
-    };
-  }, []);
-
-  const [presence, setPresence] = useState<'inactive' | 'actively_filling' | 'submitted'>('inactive');
   
-  // Track presence changes to Supabase ONLY when presence state changes
-  useEffect(() => {
-    if (channelRef.current) {
-      channelRef.current.track({ status: presence });
-    }
-  }, [presence]);
-
-  // Stringify to prevent useEffect from firing on unrelated re-renders (like form submission)
-  const stringifiedValues = JSON.stringify(formValues);
-
-  // Broadcast data whenever form actual values change
-  useEffect(() => {
-    if (channelRef.current) {
-      // Send form data via broadcast
-      channelRef.current.send({
-        type: 'broadcast',
-        event: 'form-update',
-        payload: formValues,
-      });
-      
-      // Check if there is data
-      const hasData = Object.values(formValues).some((v) => v !== undefined && v !== "");
-      
-      // Update local presence state (which triggers the other useEffect to track)
-      setPresence(hasData ? 'actively_filling' : 'inactive');
-      
-      // Hide success banner if user starts typing again
-      setIsSubmitted(false);
-    }
-  }, [stringifiedValues]); // Using stringified values as dependency
+  // Custom Hook to handle all Realtime syncing logic
+  const { setPresence } = usePatientSync(formValues, isSubmitted, setIsSubmitted);
 
   const onSubmit = async (data: PatientFormData) => {
     console.log("Form Submitted:", data);
@@ -132,7 +58,7 @@ export default function PatientForm() {
             <h1 className="text-3xl font-extrabold tracking-tight">Agnos Hospital</h1>
           </div>
           <p className="text-indigo-100 text-sm md:text-base font-medium opacity-90 pl-1">
-            Patient Registration Form • Please provide your accurate information.
+            Patient Registration Form - Please provide your accurate information.
           </p>
         </div>
 
