@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -27,6 +27,8 @@ const formSchema = z.object({
 export type PatientFormData = z.infer<typeof formSchema>;
 
 export default function PatientForm() {
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  
   const {
     register,
     handleSubmit,
@@ -41,7 +43,6 @@ export default function PatientForm() {
 
   // Initialize Supabase Channel
   useEffect(() => {
-    // Only connect if we have a URL (prevents crashing if env is missing)
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return;
 
     const channel = supabase.channel('patient-room', {
@@ -79,16 +80,31 @@ export default function PatientForm() {
       
       // Only track actively filling if there is some data, else revert to inactive
       const hasData = Object.values(formValues).some((v) => v !== undefined && v !== "");
-      channelRef.current.track({ status: hasData ? 'actively_filling' : 'inactive' });
+      
+      // Don't overwrite to actively_filling if it's already submitted and the user hasn't typed anything new
+      if (!isSubmitted) {
+        channelRef.current.track({ status: hasData ? 'actively_filling' : 'inactive' });
+      } else {
+        // If they start typing again after submitting, reset the submitted state
+        setIsSubmitted(false);
+        channelRef.current.track({ status: hasData ? 'actively_filling' : 'inactive' });
+      }
     }
   }, [stringifiedValues]); // Using stringified values as dependency
 
-  const onSubmit = (data: PatientFormData) => {
+  const onSubmit = async (data: PatientFormData) => {
     console.log("Form Submitted:", data);
-    alert("Information submitted successfully!");
+    setIsSubmitted(true);
+    
     if (channelRef.current) {
-      channelRef.current.track({ status: 'submitted' });
+      // Send the status to Supabase without blocking the UI
+      await channelRef.current.track({ status: 'submitted' });
     }
+    
+    // Hide the success message after 5 seconds
+    setTimeout(() => {
+      setIsSubmitted(false);
+    }, 5000);
   };
 
   // Helper for input styles
@@ -97,6 +113,12 @@ export default function PatientForm() {
 
   return (
     <div className="max-w-4xl mx-auto">
+      {isSubmitted && (
+        <div className="mb-6 bg-emerald-100 border border-emerald-200 text-emerald-800 px-6 py-4 rounded-2xl flex items-center gap-3 shadow-sm animate-in fade-in slide-in-from-top-4 duration-500">
+          <div className="bg-emerald-500 rounded-full w-2.5 h-2.5 animate-pulse"></div>
+          <p className="font-semibold">Information submitted successfully! The staff has been notified.</p>
+        </div>
+      )}
       <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white overflow-hidden">
         
         {/* Header */}
