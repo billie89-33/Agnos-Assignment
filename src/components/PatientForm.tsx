@@ -65,6 +65,15 @@ export default function PatientForm() {
     };
   }, []);
 
+  const [presence, setPresence] = useState<'inactive' | 'actively_filling' | 'submitted'>('inactive');
+  
+  // Track presence changes to Supabase ONLY when presence state changes
+  useEffect(() => {
+    if (channelRef.current) {
+      channelRef.current.track({ status: presence });
+    }
+  }, [presence]);
+
   // Stringify to prevent useEffect from firing on unrelated re-renders (like form submission)
   const stringifiedValues = JSON.stringify(formValues);
 
@@ -78,28 +87,21 @@ export default function PatientForm() {
         payload: formValues,
       });
       
-      // Only track actively filling if there is some data, else revert to inactive
+      // Check if there is data
       const hasData = Object.values(formValues).some((v) => v !== undefined && v !== "");
       
-      // Don't overwrite to actively_filling if it's already submitted and the user hasn't typed anything new
-      if (!isSubmitted) {
-        channelRef.current.track({ status: hasData ? 'actively_filling' : 'inactive' });
-      } else {
-        // If they start typing again after submitting, reset the submitted state
-        setIsSubmitted(false);
-        channelRef.current.track({ status: hasData ? 'actively_filling' : 'inactive' });
-      }
+      // Update local presence state (which triggers the other useEffect to track)
+      setPresence(hasData ? 'actively_filling' : 'inactive');
+      
+      // Hide success banner if user starts typing again
+      setIsSubmitted(false);
     }
   }, [stringifiedValues]); // Using stringified values as dependency
 
   const onSubmit = async (data: PatientFormData) => {
     console.log("Form Submitted:", data);
     setIsSubmitted(true);
-    
-    if (channelRef.current) {
-      // Send the status to Supabase without blocking the UI
-      await channelRef.current.track({ status: 'submitted' });
-    }
+    setPresence('submitted');
     
     // Hide the success message after 5 seconds
     setTimeout(() => {
