@@ -1,9 +1,11 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { User, Calendar, MapPin, Phone, Mail, Globe, HeartPulse, Send } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 // Schema for form validation
 const formSchema = z.object({
@@ -28,13 +30,60 @@ export default function PatientForm() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<PatientFormData>({
     resolver: zodResolver(formSchema),
   });
 
+  const formValues = watch();
+  const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
+
+  // Initialize Supabase Channel
+  useEffect(() => {
+    // Only connect if we have a URL (prevents crashing if env is missing)
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return;
+
+    const channel = supabase.channel('patient-room', {
+      config: {
+        broadcast: { ack: false },
+        presence: { key: 'patient' },
+      },
+    });
+
+    channel.subscribe(async (status) => {
+      if (status === 'SUBSCRIBED') {
+        await channel.track({ status: 'inactive' });
+      }
+    });
+
+    channelRef.current = channel;
+
+    return () => {
+      channel.unsubscribe();
+    };
+  }, []);
+
+  // Broadcast data whenever form changes
+  useEffect(() => {
+    if (channelRef.current && Object.values(formValues).some((v) => v !== undefined && v !== "")) {
+      // Send form data via broadcast
+      channelRef.current.send({
+        type: 'broadcast',
+        event: 'form-update',
+        payload: formValues,
+      });
+      // Update presence to actively filling
+      channelRef.current.track({ status: 'actively_filling' });
+    }
+  }, [formValues]);
+
   const onSubmit = (data: PatientFormData) => {
     console.log("Form Submitted:", data);
+    alert("Information submitted successfully!");
+    if (channelRef.current) {
+      channelRef.current.track({ status: 'submitted' });
+    }
   };
 
   // Helper for input styles

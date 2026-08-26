@@ -17,14 +17,14 @@
   - [x] Add Status Indicator Badge (Top-Right/Top-Center)
 
 ## 🔄 Phase 3: Real-Time Synchronization (Supabase)
-- [ ] **Presence System:**
-  - [ ] Implement "Inactive" status
-  - [ ] Implement "Actively filling in" status (🟡)
-  - [ ] Implement "Submitted" status (🟢)
-- [ ] **Broadcast System:**
-  - [ ] Capture `onChange` events from Patient Form
-  - [ ] Broadcast form data to Staff Dashboard
-  - [ ] Update Staff View state in real-time
+- [x] **Presence System:**
+  - [x] Implement "Inactive" status
+  - [x] Implement "Actively filling in" status (🟡)
+  - [x] Implement "Submitted" status (🟢)
+- [x] **Broadcast System:**
+  - [x] Capture `onChange` events from Patient Form
+  - [x] Broadcast form data to Staff Dashboard
+  - [x] Update Staff View state in real-time
 
 ## 📝 Phase 4: Documentation
 - [ ] Update `README.md` (Project overview, Setup guide)

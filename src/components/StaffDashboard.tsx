@@ -1,26 +1,46 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Activity, User, Phone, MapPin, Globe, HeartPulse, UserCircle } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 export default function StaffDashboard() {
-  // Mock data for UI development phase
-  const patientData = {
-    firstName: "Somchai",
-    middleName: "-",
-    lastName: "Jaidee",
-    dob: "1990-05-12",
-    gender: "Male",
-    nationality: "Thai",
-    religion: "Buddhism",
-    phone: "0812345678",
-    email: "somchai@email.com",
-    address: "123 Sukhumvit Rd, Bangkok, 10110",
-    language: "Thai",
-    emergencyName: "Somsri Jaidee",
-    emergencyRelation: "Mother",
-  };
+  const [patientData, setPatientData] = useState<any>({});
+  const [status, setStatus] = useState<"inactive" | "actively_filling" | "submitted">("inactive");
 
-  const status: "inactive" | "actively_filling" | "submitted" = "actively_filling"; // Mock status
+  useEffect(() => {
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return;
+
+    const channel = supabase.channel('patient-room', {
+      config: {
+        broadcast: { ack: false },
+        presence: { key: 'admin' },
+      },
+    });
+
+    channel
+      .on('broadcast', { event: 'form-update' }, (payload) => {
+        // Update the admin view with real-time data from the patient form
+        setPatientData(payload.payload);
+      })
+      .on('presence', { event: 'sync' }, () => {
+        const state = channel.presenceState();
+        // Check if there is a patient in the room and what their status is
+        if (state.patient && state.patient.length > 0) {
+          const patientStatus = (state.patient[0] as any).status;
+          setStatus(patientStatus);
+        } else {
+          // If no patient is connected, set status back to inactive
+          setStatus("inactive");
+          setPatientData({}); // Optionally clear data when patient leaves
+        }
+      })
+      .subscribe();
+
+    return () => {
+      channel.unsubscribe();
+    };
+  }, []);
 
   const getStatusBadge = () => {
     switch (status) {
@@ -72,34 +92,34 @@ export default function StaffDashboard() {
           <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8">
             <div>
               <p className="text-sm font-medium text-slate-400 mb-1">First Name</p>
-              <p className="font-semibold text-slate-800 text-lg">{patientData.firstName || "-"}</p>
+              <p className={`font-semibold text-lg ${patientData.firstName ? "text-slate-800" : "text-slate-300"}`}>{patientData.firstName || "Waiting..."}</p>
             </div>
             <div>
               <p className="text-sm font-medium text-slate-400 mb-1">Middle Name</p>
-              <p className="font-semibold text-slate-800 text-lg">{patientData.middleName || "-"}</p>
+              <p className={`font-semibold text-lg ${patientData.middleName ? "text-slate-800" : "text-slate-300"}`}>{patientData.middleName || "-"}</p>
             </div>
             <div>
               <p className="text-sm font-medium text-slate-400 mb-1">Last Name</p>
-              <p className="font-semibold text-slate-800 text-lg">{patientData.lastName || "-"}</p>
+              <p className={`font-semibold text-lg ${patientData.lastName ? "text-slate-800" : "text-slate-300"}`}>{patientData.lastName || "Waiting..."}</p>
             </div>
             <div>
               <p className="text-sm font-medium text-slate-400 mb-1">Date of Birth</p>
-              <p className="font-semibold text-slate-800 text-lg">{patientData.dob || "-"}</p>
+              <p className={`font-semibold text-lg ${patientData.dob ? "text-slate-800" : "text-slate-300"}`}>{patientData.dob || "Waiting..."}</p>
             </div>
             <div>
               <p className="text-sm font-medium text-slate-400 mb-1">Gender</p>
-              <p className="font-semibold text-slate-800 text-lg">{patientData.gender || "-"}</p>
+              <p className={`font-semibold text-lg ${patientData.gender ? "text-slate-800" : "text-slate-300"}`}>{patientData.gender || "Waiting..."}</p>
             </div>
             <div>
               <p className="text-sm font-medium text-slate-400 mb-1">Nationality</p>
               <div className="flex items-center gap-2">
-                <Globe size={16} className="text-slate-400" />
-                <p className="font-semibold text-slate-800 text-lg">{patientData.nationality || "-"}</p>
+                <Globe size={16} className={patientData.nationality ? "text-slate-400" : "text-slate-200"} />
+                <p className={`font-semibold text-lg ${patientData.nationality ? "text-slate-800" : "text-slate-300"}`}>{patientData.nationality || "Waiting..."}</p>
               </div>
             </div>
             <div className="sm:col-span-2">
               <p className="text-sm font-medium text-slate-400 mb-1">Religion</p>
-              <p className="font-semibold text-slate-800 text-lg">{patientData.religion || "-"}</p>
+              <p className={`font-semibold text-lg ${patientData.religion ? "text-slate-800" : "text-slate-300"}`}>{patientData.religion || "-"}</p>
             </div>
           </div>
         </div>
@@ -116,22 +136,22 @@ export default function StaffDashboard() {
             <div className="p-6 space-y-5">
               <div>
                 <p className="text-sm font-medium text-slate-400 mb-1">Phone Number</p>
-                <p className="font-semibold text-slate-800">{patientData.phone || "-"}</p>
+                <p className={`font-semibold ${patientData.phone ? "text-slate-800" : "text-slate-300"}`}>{patientData.phone || "Waiting..."}</p>
               </div>
               <div>
                 <p className="text-sm font-medium text-slate-400 mb-1">Email</p>
-                <p className="font-semibold text-slate-800 break-all">{patientData.email || "-"}</p>
+                <p className={`font-semibold break-all ${patientData.email ? "text-slate-800" : "text-slate-300"}`}>{patientData.email || "Waiting..."}</p>
               </div>
               <div>
                 <p className="text-sm font-medium text-slate-400 mb-1">Address</p>
                 <div className="flex items-start gap-2">
-                  <MapPin size={18} className="text-slate-400 mt-0.5 shrink-0" />
-                  <p className="font-semibold text-slate-800">{patientData.address || "-"}</p>
+                  <MapPin size={18} className={`mt-0.5 shrink-0 ${patientData.address ? "text-slate-400" : "text-slate-200"}`} />
+                  <p className={`font-semibold ${patientData.address ? "text-slate-800" : "text-slate-300"}`}>{patientData.address || "Waiting..."}</p>
                 </div>
               </div>
               <div>
                 <p className="text-sm font-medium text-slate-400 mb-1">Language</p>
-                <p className="font-semibold text-slate-800">{patientData.language || "-"}</p>
+                <p className={`font-semibold ${patientData.language ? "text-slate-800" : "text-slate-300"}`}>{patientData.language || "Waiting..."}</p>
               </div>
             </div>
           </div>
@@ -145,11 +165,11 @@ export default function StaffDashboard() {
             <div className="p-6 space-y-5">
               <div>
                 <p className="text-sm font-medium text-slate-400 mb-1">Contact Name</p>
-                <p className="font-semibold text-slate-800">{patientData.emergencyName || "-"}</p>
+                <p className={`font-semibold ${patientData.emergencyName ? "text-slate-800" : "text-slate-300"}`}>{patientData.emergencyName || "-"}</p>
               </div>
               <div>
                 <p className="text-sm font-medium text-slate-400 mb-1">Relationship</p>
-                <p className="font-semibold text-slate-800">{patientData.emergencyRelation || "-"}</p>
+                <p className={`font-semibold ${patientData.emergencyRelation ? "text-slate-800" : "text-slate-300"}`}>{patientData.emergencyRelation || "-"}</p>
               </div>
             </div>
           </div>
