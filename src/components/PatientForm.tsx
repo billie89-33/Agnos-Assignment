@@ -78,7 +78,7 @@ export default function PatientForm() {
               <InputField
                 label="First Name"
                 required
-                placeholder="e.g. Somchai"
+                placeholder="Somchai"
                 register={register("firstName")}
                 error={errors.firstName?.message}
               />
@@ -94,7 +94,7 @@ export default function PatientForm() {
               <InputField
                 label="Last Name"
                 required
-                placeholder="e.g. Jaidee"
+                placeholder="Jaidee"
                 register={register("lastName")}
                 error={errors.lastName?.message}
               />
@@ -140,7 +140,7 @@ export default function PatientForm() {
                 <InputField
                   label="Religion"
                   optional
-                  placeholder="e.g. Buddhism"
+                  placeholder="Buddhism"
                   register={register("religion")}
                   error={errors.religion?.message}
                 />
@@ -217,14 +217,14 @@ export default function PatientForm() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
               <InputField
                 label="Contact Name"
-                placeholder="e.g. Somsri Jaidee"
+                placeholder="Somsri Jaidee"
                 register={register("emergencyName")}
                 error={errors.emergencyName?.message}
               />
 
               <InputField
                 label="Relationship"
-                placeholder="e.g. Mother, Spouse"
+                placeholder="Mother, Spouse"
                 register={register("emergencyRelation")}
                 error={errors.emergencyRelation?.message}
               />
