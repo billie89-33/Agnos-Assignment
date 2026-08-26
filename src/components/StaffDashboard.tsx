@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { Activity, User, Phone, MapPin, Globe, HeartPulse, UserCircle } from "lucide-react";
 import { useAdminSync } from "@/hooks/useAdminSync";
