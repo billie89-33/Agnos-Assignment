@@ -8,6 +8,7 @@ import { patientFormSchema, PatientFormData } from "@/schemas/patientSchema";
 import { usePatientSync } from "@/hooks/usePatientSync";
 import { InputField } from "@/components/ui/InputField";
 import { PhoneField } from "@/components/ui/PhoneField";
+import { DateField } from "@/components/ui/DateField";
 import { Control } from "react-hook-form";
 import { SelectField } from "@/components/ui/SelectField";
 
@@ -99,12 +100,12 @@ export default function PatientForm() {
                 error={errors.lastName?.message}
               />
 
-              <InputField
+              <DateField
                 label="Date of Birth"
-                type="date"
                 required
                 icon={<Calendar size={18} />}
-                register={register("dob")}
+                control={control}
+                name="dob"
                 error={errors.dob?.message}
               />
 
