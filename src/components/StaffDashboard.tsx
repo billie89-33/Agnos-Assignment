@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Activity, User, Phone, MapPin, Globe, HeartPulse, UserCircle } from "lucide-react";
 import { useAdminSync } from "@/hooks/useAdminSync";
@@ -9,11 +9,11 @@ export default function StaffDashboard() {
   const getStatusBadge = () => {
     switch (status) {
       case "submitted":
-        return <div className="flex items-center gap-2 bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full font-semibold text-sm shadow-sm border border-emerald-200"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span> ?? Submitted</div>;
+        return <div className="flex items-center gap-2 bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full font-semibold text-sm shadow-sm border border-emerald-200"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span> 🟢 Submitted</div>;
       case "actively_filling":
-        return <div className="flex items-center gap-2 bg-amber-100 text-amber-700 px-4 py-2 rounded-full font-semibold text-sm shadow-sm border border-amber-200"><span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span> ?? Actively filling...</div>;
+        return <div className="flex items-center gap-2 bg-amber-100 text-amber-700 px-4 py-2 rounded-full font-semibold text-sm shadow-sm border border-amber-200"><span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span> 🟡 Actively filling...</div>;
       default:
-        return <div className="flex items-center gap-2 bg-slate-100 text-slate-600 px-4 py-2 rounded-full font-semibold text-sm shadow-sm border border-slate-200"><span className="w-2.5 h-2.5 rounded-full bg-slate-400"></span> ? Inactive</div>;
+        return <div className="flex items-center gap-2 bg-slate-100 text-slate-600 px-4 py-2 rounded-full font-semibold text-sm shadow-sm border border-slate-200"><span className="w-2.5 h-2.5 rounded-full bg-slate-400"></span> ⚪ Inactive</div>;
     }
   };
 
