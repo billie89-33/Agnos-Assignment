@@ -66,15 +66,17 @@ export default function PatientForm() {
 
   // Broadcast data whenever form changes
   useEffect(() => {
-    if (channelRef.current && Object.values(formValues).some((v) => v !== undefined && v !== "")) {
+    if (channelRef.current) {
       // Send form data via broadcast
       channelRef.current.send({
         type: 'broadcast',
         event: 'form-update',
         payload: formValues,
       });
-      // Update presence to actively filling
-      channelRef.current.track({ status: 'actively_filling' });
+      
+      // Only track actively filling if there is some data, else revert to inactive
+      const hasData = Object.values(formValues).some((v) => v !== undefined && v !== "");
+      channelRef.current.track({ status: hasData ? 'actively_filling' : 'inactive' });
     }
   }, [formValues]);
 
