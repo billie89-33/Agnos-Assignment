@@ -1,31 +1,31 @@
 # 🏥 Agnos Patient Registration & Staff Monitor System
 
-A real-time patient registration form and staff monitoring dashboard built with **Next.js (App Router)**, **TailwindCSS**, and **Supabase Realtime**.
+ระบบฟอร์มลงทะเบียนผู้ป่วยและหน้าจอตรวจสอบสำหรับเจ้าหน้าที่แบบเรียลไทม์ พัฒนาด้วย **Next.js (App Router)**, **TailwindCSS**, และ **Supabase Realtime**
 
-## 🚀 Features
-- **Responsive Patient Form:** A clean, modern UI for patients to fill in their details. Supports both desktop (2 columns) and mobile (1 column).
-- **Zod Validation:** Comprehensive input validation (emails, required fields) using `react-hook-form` and `zod`.
-- **Real-Time Staff Dashboard:** Staff can monitor what the patient is typing in real-time.
-- **Presence Indicators:** Live status badge showing if the patient is "Inactive ⚪", "Actively filling in 🟡", or "Submitted 🟢".
+## 🚀 ฟีเจอร์หลัก
+- **Responsive Patient Form:** หน้าต่างกรอกข้อมูลผู้ป่วยดีไซน์ทันสมัย ใช้งานง่าย รองรับทั้งบนเดสก์ท็อป (แสดง 2 คอลัมน์) และมือถือ (แสดง 1 คอลัมน์)
+- **Zod Validation:** ระบบตรวจสอบความถูกต้องของข้อมูลอย่างรวดเร็ว (เช่น รูปแบบอีเมล, ฟิลด์บังคับกรอก) ด้วย `react-hook-form` และ `zod`
+- **Real-Time Staff Dashboard:** เจ้าหน้าที่สามารถมองเห็นข้อมูลที่ผู้ป่วยกำลังพิมพ์ได้แบบสดๆ (Real-time)
+- **Presence Indicators:** ป้ายสถานะแจ้งเตือนแบบเรียลไทม์ เพื่อบอกเจ้าหน้าที่ว่าผู้ป่วยอยู่ในสถานะ "Inactive ⚪" (ไม่ได้ใช้งาน), "Actively filling in 🟡" (กำลังพิมพ์), หรือ "Submitted 🟢" (ส่งข้อมูลแล้ว)
 
 ---
 
-## 💻 How to Run the Project
+## 💻 วิธีการรันโปรเจกต์
 
-1. Install dependencies:
+1. ติดตั้ง Dependencies:
 ```bash
 npm install
 ```
-2. Setup environment variables in a `.env.local` file:
+2. ตั้งค่า Environment variables โดยสร้างไฟล์ `.env.local`:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
-3. Start the development server:
+3. รัน Development Server:
 ```bash
 npm run dev
 ```
-4. Build for production:
+4. Build สำหรับ Production:
 ```bash
 npm run build
 npm start
@@ -33,51 +33,51 @@ npm start
 
 ---
 
-## 🏗️ Development Planning Documentation
+## 🏗️ Development Planning Documentation (เอกสารประกอบการพัฒนา)
 
-### 1. Project Structure
+### 1. โครงสร้างโปรเจกต์ (Project Structure)
 ```text
 Agnos/
 ├── src/
 │   ├── app/
-│   │   ├── admin/       # Route for Staff Dashboard (/admin)
+│   │   ├── admin/       # หน้าต่างสำหรับเจ้าหน้าที่ (/admin)
 │   │   │   └── page.tsx
 │   │   ├── globals.css  # Global Tailwind styles
 │   │   ├── layout.tsx   # Root layout
-│   │   └── page.tsx     # Route for Patient Form (/)
-│   ├── components/      # Reusable React components
+│   │   └── page.tsx     # หน้าต่างฟอร์มสำหรับผู้ป่วย (/)
+│   ├── components/      # React Components ที่ถูกเรียกใช้งานซ้ำ
 │   │   ├── PatientForm.tsx
 │   │   └── StaffDashboard.tsx
-│   └── lib/             # Utilities and configurations
-│       └── supabase.ts  # Supabase client initialization
-└── public/              # Static assets (SVGs, icons)
+│   └── lib/             # Utilities และการตั้งค่าต่างๆ
+│       └── supabase.ts  # ตั้งค่าการเชื่อมต่อ Supabase Client
+└── public/              # ไฟล์ภาพและไอคอน (Static assets)
 ```
 
-### 2. UI/UX Design Decisions
-- **Form Layout (Desktop vs Mobile):** 
-  - *Desktop:* Utilized a 2-column grid (`md:grid-cols-2`) to optimize vertical screen real estate, reducing the need for excessive scrolling and providing a better overview of the form.
-  - *Mobile:* Switched to a 1-column stack layout with large input padding to ensure touch-friendly targets for mobile users.
-- **Modern Aesthetic:** Implemented a glassmorphism effect (backdrop-blur), soft shadows, and a gradient background (Indigo/Slate) to make the interface feel welcoming, clean, and professional—steering away from sterile, flat hospital designs.
-- **Real-time Indicator (Staff View):** Placed a highly visible Status Badge (Inactive / Actively filling / Submitted) with pulsing animations at the top right of the dashboard. This allows staff to instantly perceive patient activity without scanning the entire screen.
-- **Visual Hierarchy:** Grouped information into logical sections (Personal Details, Contact Info, Emergency Contact) using distinct icons and soft background colors, improving the skimmability of the dashboard.
+### 2. การตัดสินใจด้านการออกแบบ UI/UX (UI/UX Design Decisions)
+- **เลย์เอาต์ฟอร์ม (Desktop vs Mobile):** 
+  - *Desktop:* เลือกใช้ Grid แบบ 2 คอลัมน์ (`md:grid-cols-2`) เพื่อใช้พื้นที่หน้าจอแนวตั้งให้เกิดประโยชน์สูงสุด ช่วยลดการเลื่อนหน้าจอ (Scrolling) และทำให้มองเห็นภาพรวมของฟอร์มได้ง่ายขึ้น
+  - *Mobile:* เปลี่ยนเป็นแบบ 1 คอลัมน์พร้อมช่องกรอกข้อมูลที่มีขนาดใหญ่ขึ้น (Padding กว้าง) เพื่อให้รองรับการสัมผัสบนหน้าจอมือถือได้ดีที่สุด
+- **ความสวยงามทันสมัย (Modern Aesthetic):** นำสไตล์ Glassmorphism (พื้นหลังเบลอ) มาใช้ร่วมกับเงาแบบนุ่มนวล และพื้นหลังแบบไล่สี (Gradient) เพื่อให้หน้าต่างดูเป็นมิตร สะอาดตา และเป็นมืออาชีพ ลบภาพจำของระบบโรงพยาบาลที่มักจะดูแข็งทื่อ
+- **ตัวชี้วัดสถานะเรียลไทม์ (Real-time Indicator):** จัดวางป้ายสถานะ (Inactive / Actively filling / Submitted) ให้เด่นชัดที่สุดที่มุมขวาบนของหน้าจอ Admin พร้อมเพิ่มแอนิเมชันไฟกระพริบ เพื่อให้เจ้าหน้าที่สังเกตเห็นความเคลื่อนไหวได้ทันทีโดยไม่ต้องกวาดสายตาทั้งหน้าจอ
+- **การจัดกลุ่มข้อมูล (Visual Hierarchy):** แบ่งข้อมูลออกเป็นหมวดหมู่ย่อย (ข้อมูลส่วนตัว, ข้อมูลติดต่อ, ข้อมูลติดต่อฉุกเฉิน) ด้วยไอคอนและสีพื้นหลังที่แตกต่างกันเล็กน้อย ช่วยให้เจ้าหน้าที่กวาดสายตาอ่านข้อมูล (Skim) ได้รวดเร็วยิ่งขึ้น
 
-### 3. Component Architecture
-- `PatientForm.tsx`: A "Smart" Client Component responsible for rendering the form, handling user input, performing Zod validation, and broadcasting changes via Supabase. It uses `useForm` (React Hook Form) to manage state efficiently without unnecessary re-renders.
-- `StaffDashboard.tsx`: A Client Component acting as a "Listener". It subscribes to the Supabase WebSocket channel (`patient-room`), listens for `broadcast` events to update its internal state (`patientData`), and tracks `presence` to update the user status badge.
-- `app/page.tsx` & `app/admin/page.tsx`: Server Components acting as simple wrappers/layouts that instantiate the Client Components and provide easy navigation links between them for testing purposes.
+### 3. สถาปัตยกรรมคอมโพเนนต์ (Component Architecture)
+- `PatientForm.tsx`: เป็น "Smart" Client Component ที่ทำหน้าที่เรนเดอร์ฟอร์ม, รับข้อมูลจากผู้ใช้, ตรวจสอบข้อมูลด้วย Zod, และกระจายข้อมูล (Broadcast) ผ่าน Supabase โดยใช้ `useForm` (React Hook Form) เพื่อจัดการ State อย่างมีประสิทธิภาพและลดการ Re-render ที่ไม่จำเป็น
+- `StaffDashboard.tsx`: เป็น Client Component ที่ทำหน้าที่เป็น "ผู้ฟัง (Listener)" โดยจะไป Subscribe กับช่องสัญญาณ (`patient-room`) ของ Supabase WebSocket เพื่อรอรับอีเวนต์ `broadcast` มาอัปเดตข้อมูล (`patientData`) และดักจับอีเวนต์ `presence` เพื่ออัปเดตป้ายสถานะคนไข้
+- `app/page.tsx` & `app/admin/page.tsx`: เป็น Server Components ที่ทำหน้าที่เป็นแค่เปลือก (Wrapper/Layout) ในการเรียกใช้งาน Client Components ด้านบน และมีปุ่มลิงก์สลับไปมาเพื่อความสะดวกในการทดสอบ
 
-### 4. Real-Time Synchronization Flow
-The system utilizes **Supabase WebSockets** as a Message Broker, ensuring low-latency communication without requiring database writes (No tables were created).
+### 4. ลำดับการทำงานของ Real-Time Synchronization
+ระบบนี้ใช้ **Supabase WebSockets** ทำหน้าที่เป็นตัวกลางรับส่งข้อความ (Message Broker) เพื่อให้สื่อสารกันได้อย่างรวดเร็ว (Low-latency) โดย**ไม่มีการบันทึกข้อมูลลงฐานข้อมูล** (ไม่มีการสร้างตารางหรือ Database Writes ใดๆ ตามข้อกำหนดของโจทย์)
 
-**Step-by-Step Flow:**
-1. **Initial Connection:** When the Patient (`/`) and Staff (`/admin`) open the app, both subscribe to the `patient-room` channel. The patient's initial presence is set to `inactive`.
-2. **Actively Filling In:** 
-   - When the patient types, `onChange` triggers an update.
-   - The patient client broadcasts a `form-update` event containing the form payload.
-   - The patient client updates its presence state to `actively_filling`.
-   - The Staff View instantly receives the payload to display the text, and updates the status badge to 🟡.
-3. **Submission:** When the patient clicks submit, validation passes, and the presence state is updated to `submitted` 🟢, notifying staff that the form is complete.
-4. **Disconnection:** If the patient closes the tab, Supabase automatically drops their presence, and the Staff View reverts the badge to ⚪ `Inactive`.
+**ขั้นตอนการทำงาน (Step-by-Step Flow):**
+1. **การเชื่อมต่อเริ่มต้น (Initial Connection):** เมื่อผู้ป่วย (`/`) และเจ้าหน้าที่ (`/admin`) เปิดแอปพลิเคชัน ทั้งคู่จะเข้าไปเชื่อมต่อกับช่องสัญญาณชื่อ `patient-room` โดยค่าเริ่มต้นสถานะของผู้ป่วยจะถูกตั้งเป็น `inactive` (ไม่มีการเคลื่อนไหว)
+2. **ขณะกำลังพิมพ์ (Actively Filling In):** 
+   - เมื่อผู้ป่วยพิมพ์ตัวอักษรใดๆ ฟังก์ชัน `onChange` จะถูกเรียกทำงาน
+   - ฝั่งผู้ป่วยจะทำการกระจาย (Broadcast) อีเวนต์ชื่อ `form-update` ซึ่งแนบข้อมูลในฟอร์มทั้งหมดไปด้วย
+   - ฝั่งผู้ป่วยทำการอัปเดตสถานะของตัวเอง (Presence state) เป็น `actively_filling`
+   - หน้าจอเจ้าหน้าที่จะได้รับข้อมูลที่ส่งมาทันทีและนำไปแสดงผล พร้อมกับเปลี่ยนป้ายสถานะเป็น 🟡 
+3. **การส่งข้อมูล (Submission):** เมื่อผู้ป่วยกดปุ่ม Submit และข้อมูลผ่านการตรวจสอบ (Validation) สถานะจะถูกเปลี่ยนเป็น `submitted` 🟢 เพื่อแจ้งให้เจ้าหน้าที่ทราบว่าการกรอกข้อมูลเสร็จสมบูรณ์แล้ว
+4. **การยกเลิกการเชื่อมต่อ (Disconnection):** หากผู้ป่วยปิดแท็บเบราว์เซอร์หนีไป Supabase จะตัดสถานะ (Presence) ออกอัตโนมัติ และหน้าจอเจ้าหน้าที่จะเปลี่ยนป้ายสถานะกลับเป็น ⚪ `Inactive` ทันที
 
 ---
-*Built as a technical assignment for Agnos.*
+*โปรเจกต์นี้จัดทำขึ้นเพื่อเป็นแบบทดสอบสำหรับ Agnos*
