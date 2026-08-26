@@ -68,7 +68,11 @@ export default function StaffDashboard() {
             </div>
             <div>
               <p className="text-sm font-medium text-slate-400 mb-1">Date of Birth</p>
-              <p className={`font-semibold text-lg ${patientData.dob ? "text-slate-800" : "text-slate-300"}`}>{patientData.dob || "Waiting..."}</p>
+              <p className={`font-semibold text-lg ${patientData.dob ? "text-slate-800" : "text-slate-300"}`}>
+                {patientData.dob 
+                  ? new Date(patientData.dob).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) 
+                  : "Waiting..."}
+              </p>
             </div>
             <div>
               <p className="text-sm font-medium text-slate-400 mb-1">Gender</p>
