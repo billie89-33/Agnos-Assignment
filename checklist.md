@@ -12,9 +12,9 @@
   - [x] Implement Responsive Grid Layout (Desktop: 2 cols, Mobile: 1 col)
   - [x] Add 12 Input Fields (First Name, Last Name, DOB, Gender, etc.)
   - [x] Implement Form Validation (Required fields, Email, Phone format)
-- [ ] **Staff Dashboard (`/admin`):**
-  - [ ] Implement Dashboard Layout (Card-based, clear visual hierarchy)
-  - [ ] Add Status Indicator Badge (Top-Right/Top-Center)
+- [x] **Staff Dashboard (`/admin`):**
+  - [x] Implement Dashboard Layout (Card-based, clear visual hierarchy)
+  - [x] Add Status Indicator Badge (Top-Right/Top-Center)
 
 ## 🔄 Phase 3: Real-Time Synchronization (Supabase)
 - [ ] **Presence System:**
