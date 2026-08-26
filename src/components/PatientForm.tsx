@@ -6,6 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { User, Calendar, MapPin, Phone, Mail, Globe, HeartPulse, Send } from "lucide-react";
 import { patientFormSchema, PatientFormData } from "@/schemas/patientSchema";
 import { usePatientSync } from "@/hooks/usePatientSync";
+import { InputField } from "@/components/ui/InputField";
+import { SelectField } from "@/components/ui/SelectField";
 
 export default function PatientForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -34,10 +36,6 @@ export default function PatientForm() {
       setIsSubmitted(false);
     }, 5000);
   };
-
-  // Helper for input styles
-  const inputClass = "w-full p-3.5 border border-slate-200 rounded-xl bg-slate-50/50 hover:bg-white focus:bg-white focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all duration-200 text-slate-700 shadow-sm";
-  const labelClass = "text-sm font-semibold text-slate-700 mb-1.5 ml-1 block";
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -74,61 +72,75 @@ export default function PatientForm() {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-              <div>
-                <label className={labelClass}>First Name <span className="text-rose-500">*</span></label>
-                <input {...register("firstName")} className={inputClass} placeholder="e.g. Somchai" />
-                {errors.firstName && <span className="text-xs text-rose-500 mt-1 ml-1 block font-medium">{errors.firstName.message}</span>}
-              </div>
+              <InputField
+                label="First Name"
+                required
+                placeholder="e.g. Somchai"
+                register={register("firstName")}
+                error={errors.firstName?.message}
+              />
 
-              <div>
-                <label className={labelClass}>Middle Name <span className="text-slate-400 font-normal">(Optional)</span></label>
-                <input {...register("middleName")} className={inputClass} placeholder="-" />
-              </div>
+              <InputField
+                label="Middle Name"
+                optional
+                placeholder="-"
+                register={register("middleName")}
+                error={errors.middleName?.message}
+              />
 
-              <div>
-                <label className={labelClass}>Last Name <span className="text-rose-500">*</span></label>
-                <input {...register("lastName")} className={inputClass} placeholder="e.g. Jaidee" />
-                {errors.lastName && <span className="text-xs text-rose-500 mt-1 ml-1 block font-medium">{errors.lastName.message}</span>}
-              </div>
+              <InputField
+                label="Last Name"
+                required
+                placeholder="e.g. Jaidee"
+                register={register("lastName")}
+                error={errors.lastName?.message}
+              />
 
-              <div>
-                <label className={labelClass}>Date of Birth <span className="text-rose-500">*</span></label>
-                <div className="relative">
-                  <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                  <input type="date" {...register("dob")} className={`${inputClass} pl-10`} />
-                </div>
-                {errors.dob && <span className="text-xs text-rose-500 mt-1 ml-1 block font-medium">{errors.dob.message}</span>}
-              </div>
+              <InputField
+                label="Date of Birth"
+                type="date"
+                required
+                icon={<Calendar size={18} />}
+                register={register("dob")}
+                error={errors.dob?.message}
+              />
 
-              <div>
-                <label className={labelClass}>Gender <span className="text-rose-500">*</span></label>
-                <select {...register("gender")} className={inputClass}>
-                  <option value="">Select Gender...</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  <option value="Other">Other</option>
-                </select>
-                {errors.gender && <span className="text-xs text-rose-500 mt-1 ml-1 block font-medium">{errors.gender.message}</span>}
-              </div>
+              <SelectField
+                label="Gender"
+                required
+                register={register("gender")}
+                error={errors.gender?.message}
+                placeholder="Select Gender..."
+                options={[
+                  { value: "Male", label: "Male" },
+                  { value: "Female", label: "Female" },
+                  { value: "Other", label: "Other" },
+                ]}
+              />
 
-              <div>
-                <label className={labelClass}>Nationality <span className="text-rose-500">*</span></label>
-                <div className="relative">
-                  <Globe className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                  <select {...register("nationality")} className={`${inputClass} pl-10`}>
-                    <option value="">Select Nationality...</option>
-                    <option value="Thai">Thai</option>
-                    <option value="American">American</option>
-                    <option value="Japanese">Japanese</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-                {errors.nationality && <span className="text-xs text-rose-500 mt-1 ml-1 block font-medium">{errors.nationality.message}</span>}
-              </div>
+              <SelectField
+                label="Nationality"
+                required
+                icon={<Globe size={18} />}
+                register={register("nationality")}
+                error={errors.nationality?.message}
+                placeholder="Select Nationality..."
+                options={[
+                  { value: "Thai", label: "Thai" },
+                  { value: "American", label: "American" },
+                  { value: "Japanese", label: "Japanese" },
+                  { value: "Other", label: "Other" },
+                ]}
+              />
 
               <div className="md:col-span-2">
-                <label className={labelClass}>Religion <span className="text-slate-400 font-normal">(Optional)</span></label>
-                <input {...register("religion")} className={inputClass} placeholder="e.g. Buddhism" />
+                <InputField
+                  label="Religion"
+                  optional
+                  placeholder="e.g. Buddhism"
+                  register={register("religion")}
+                  error={errors.religion?.message}
+                />
               </div>
             </div>
           </section>
@@ -143,41 +155,51 @@ export default function PatientForm() {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-              <div>
-                <label className={labelClass}>Phone Number <span className="text-rose-500">*</span></label>
-                <div className="relative">
-                  <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                  <input type="tel" {...register("phone")} className={`${inputClass} pl-10`} placeholder="081 234 5678" />
-                </div>
-                {errors.phone && <span className="text-xs text-rose-500 mt-1 ml-1 block font-medium">{errors.phone.message}</span>}
-              </div>
+              <InputField
+                label="Phone Number"
+                type="tel"
+                required
+                icon={<Phone size={18} />}
+                placeholder="081 234 5678"
+                register={register("phone")}
+                error={errors.phone?.message}
+              />
 
-              <div>
-                <label className={labelClass}>Email <span className="text-rose-500">*</span></label>
-                <div className="relative">
-                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                  <input type="email" {...register("email")} className={`${inputClass} pl-10`} placeholder="example@email.com" />
-                </div>
-                {errors.email && <span className="text-xs text-rose-500 mt-1 ml-1 block font-medium">{errors.email.message}</span>}
+              <InputField
+                label="Email"
+                type="email"
+                required
+                icon={<Mail size={18} />}
+                placeholder="example@email.com"
+                register={register("email")}
+                error={errors.email?.message}
+              />
+
+              <div className="md:col-span-2">
+                <InputField
+                  label="Address"
+                  isTextarea
+                  rows={3}
+                  required
+                  icon={<MapPin size={18} />}
+                  placeholder="123 Sukhumvit Rd..."
+                  register={register("address")}
+                  error={errors.address?.message}
+                />
               </div>
 
               <div className="md:col-span-2">
-                <label className={labelClass}>Address <span className="text-rose-500">*</span></label>
-                <div className="relative">
-                  <MapPin className="absolute left-3.5 top-4 text-slate-400" size={18} />
-                  <textarea {...register("address")} rows={3} className={`${inputClass} pl-10 resize-none`} placeholder="123 Sukhumvit Rd..." />
-                </div>
-                {errors.address && <span className="text-xs text-rose-500 mt-1 ml-1 block font-medium">{errors.address.message}</span>}
-              </div>
-
-              <div className="md:col-span-2">
-                <label className={labelClass}>Preferred Language <span className="text-rose-500">*</span></label>
-                <select {...register("language")} className={inputClass}>
-                  <option value="">Select Language...</option>
-                  <option value="Thai">ภาษาไทย (Thai)</option>
-                  <option value="English">English</option>
-                </select>
-                {errors.language && <span className="text-xs text-rose-500 mt-1 ml-1 block font-medium">{errors.language.message}</span>}
+                <SelectField
+                  label="Preferred Language"
+                  required
+                  register={register("language")}
+                  error={errors.language?.message}
+                  placeholder="Select Language..."
+                  options={[
+                    { value: "Thai", label: "ภาษาไทย (Thai)" },
+                    { value: "English", label: "English" },
+                  ]}
+                />
               </div>
             </div>
           </section>
@@ -192,15 +214,19 @@ export default function PatientForm() {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-              <div>
-                <label className={labelClass}>Contact Name</label>
-                <input {...register("emergencyName")} className={inputClass} placeholder="e.g. Somsri Jaidee" />
-              </div>
+              <InputField
+                label="Contact Name"
+                placeholder="e.g. Somsri Jaidee"
+                register={register("emergencyName")}
+                error={errors.emergencyName?.message}
+              />
 
-              <div>
-                <label className={labelClass}>Relationship</label>
-                <input {...register("emergencyRelation")} className={inputClass} placeholder="e.g. Mother, Spouse" />
-              </div>
+              <InputField
+                label="Relationship"
+                placeholder="e.g. Mother, Spouse"
+                register={register("emergencyRelation")}
+                error={errors.emergencyRelation?.message}
+              />
             </div>
           </section>
 
