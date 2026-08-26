@@ -7,31 +7,20 @@ A real-time patient registration form and staff monitoring dashboard built with 
 - **Zod Validation:** Comprehensive input validation (emails, required fields) using `react-hook-form` and `zod`.
 - **Real-Time Staff Dashboard:** Staff can monitor what the patient is typing in real-time.
 - **Presence Indicators:** Live status badge showing if the patient is "Inactive ⚪", "Actively filling in 🟡", or "Submitted 🟢".
-- **Docker Support:** Fully containerized for easy deployment.
 
 ---
 
 ## 💻 How to Run the Project
 
-### Option A: Using Docker (Recommended)
-You can run this project flawlessly using Docker. 
-1. Create a `.env.local` or `.env` file in the root directory:
-```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
-2. Run Docker Compose:
-```bash
-docker-compose up --build
-```
-3. Open `http://localhost:3000`
-
-### Option B: Manual Setup
 1. Install dependencies:
 ```bash
 npm install
 ```
-2. Setup environment variables in `.env.local`.
+2. Setup environment variables in a `.env.local` file:
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
 3. Start the development server:
 ```bash
 npm run dev
@@ -61,9 +50,7 @@ Agnos/
 │   │   └── StaffDashboard.tsx
 │   └── lib/             # Utilities and configurations
 │       └── supabase.ts  # Supabase client initialization
-├── public/              # Static assets (SVGs, icons)
-├── Dockerfile           # Multi-stage Docker build
-└── docker-compose.yml   # Docker Compose configuration
+└── public/              # Static assets (SVGs, icons)
 ```
 
 ### 2. UI/UX Design Decisions
